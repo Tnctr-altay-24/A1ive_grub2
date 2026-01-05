@@ -20,7 +20,7 @@ jobs:
 
     - name: i686-w64-mingw32 configure
       run: |
-        ./configure --prefix=/ --target=i686-w64-mingw32-gcc --with-platform=none --host=i686-w64-mingw32-gcc
+        ./configure --prefix=/ --target=i686-w64-mingw32 --with-platform=none --host=i686-w64-mingw32
     - name: i686-w64-mingw32 make
       run: |
         make
