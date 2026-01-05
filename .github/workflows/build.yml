@@ -20,13 +20,7 @@ jobs:
 
     - name: i686-w64-mingw32 configure
   run: |
-    ./configure --prefix=/ --with-platform=none \
-      --disable-werror \
-      --disable-device-mapper \
-      --disable-grub-mount \
-      ac_cv_func___bss_start=no \
-      ac_cv_func_edata=no \
-      ac_cv_func__edata=no
+    ./configure --prefix=/ --target=i686-w64-mingw32 --with-platform=none --host=i686-w64-mingw32
     - name: i686-w64-mingw32 make
       run: |
         make
