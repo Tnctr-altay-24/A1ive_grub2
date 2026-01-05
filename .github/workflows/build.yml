@@ -20,11 +20,7 @@ jobs:
 
     - name: i686-w64-mingw32 configure
   run: |
-    ./configure \
-      --host=i686-w64-mingw32 \
-      --build=x86_64-pc-linux-gnu \
-      --prefix=/ \
-      --with-platform=none \
+    ./configure --prefix=/ --with-platform=none \
       --disable-werror \
       --disable-device-mapper \
       --disable-grub-mount \
