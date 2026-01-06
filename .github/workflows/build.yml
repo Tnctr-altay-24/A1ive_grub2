@@ -20,20 +20,42 @@ jobs:
           image: ubuntu:20.04
           options: --user root
           run: |
+            # Etkileşimsiz (non-interactive) modda zaman dilimi ayarı
             export DEBIAN_FRONTEND=noninteractive
             sudo apt-get update
             sudo apt-get install -y tzdata
 
+            # Zaman dilimi ayarlaması
             sudo ln -fs /usr/share/zoneinfo/Europe/Istanbul /etc/localtime
             sudo dpkg-reconfigure --frontend noninteractive tzdata
 
-            apt-get update && apt-get install -y build-essential python3 python3-pip python3-dev iasl lzop unifont autopoint bison flex gettext gcc-mingw-w64 libc6-dev libtool pkg-config libssl-dev
-            ./bootstrap
-            ./configure --prefix=/ --target=i686-w64-mingw32 --with-platform=none --host=i686-w64-mingw32
-            make
-            make install DESTDIR=$PWD/PKG
-            make clean
+            # Gereksinimleri yükleyelim
+            apt-get install -y build-essential python3 python3-pip python3-dev iasl lzop unifont autopoint bison flex gettext gcc-mingw-w64 libc6-dev libtool pkg-config libssl-dev mingw-w64
 
+            # Çalışma dizinini doğru ayarlayalım
+            mkdir -p /workspace
+            cp -r . /workspace
+
+            cd /workspace
+
+            # Eğer bootstrap ve configure dosyaları varsa, bu komutları çalıştırın
+            if [ -f ./bootstrap ]; then
+              ./bootstrap
+            fi
+
+            # configure dosyasının var olup olmadığını kontrol edelim
+            if [ -f ./configure ]; then
+              ./configure --prefix=/ --target=i686-w64-mingw32 --with-platform=none --host=i686-w64-mingw32
+            fi
+
+            # Eğer makefile varsa, make komutunu çalıştıralım
+            if [ -f Makefile ]; then
+              make
+              make install DESTDIR=$PWD/PKG
+              make clean
+            else
+              echo "Makefile bulunamadı, make komutu çalıştırılamaz."
+            fi
 
       - name: x86_64-efi configure
         run: ./configure --prefix=/ --target=x86_64 --with-platform=efi
