@@ -20,8 +20,13 @@ jobs:
           image: ubuntu:20.04
           options: --user root
           run: |
+            export DEBIAN_FRONTEND=noninteractive
+            sudo apt-get update
+            sudo apt-get install -y tzdata
+
             sudo ln -fs /usr/share/zoneinfo/Europe/Istanbul /etc/localtime
             sudo dpkg-reconfigure --frontend noninteractive tzdata
+
             apt-get update && apt-get install -y build-essential python3 python3-pip python3-dev iasl lzop unifont autopoint bison flex gettext gcc-mingw-w64 libc6-dev libtool pkg-config libssl-dev
             ./bootstrap
             ./configure --prefix=/ --target=i686-w64-mingw32 --with-platform=none --host=i686-w64-mingw32
