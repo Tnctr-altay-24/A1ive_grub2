@@ -26,16 +26,6 @@ jobs:
     - name: bootstrap
       run: ./bootstrap
 
-    - name: i686-w64-mingw32 configure
-      run: |
-          ./configure --prefix=/ --target=i686-w64-mingw32 --with-platform=none --host=i686-w64-mingw32
-    - name: i686-w64-mingw make
-      run: |
-          make
-          make install DESTDIR=$PWD/PKG
-    - name: i686-w64-mingw clean
-      run: make clean
-
     - name: x86_64-efi configure
       run: ./configure --prefix=/ --target=x86_64 --with-platform=efi
     - name: x86_64-efi make
