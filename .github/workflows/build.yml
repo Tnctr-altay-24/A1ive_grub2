@@ -9,60 +9,62 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: checkout
-      uses: actions/checkout@v4
-    - name: initialize
-      run: |
-        sudo apt-get -y update
-        sudo -E apt-get -y install build-essential python3 python-is-python3 iasl lzop unifont autopoint bison flex gettext gcc-mingw-w64 libc6-dev libtool pkg-config libssl-dev
-    - name: bootstrap
-      run: ./bootstrap
+      - name: Checkout repository with submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: 'true'
 
-    - name: i686-w64-mingw32 configure
-      run: |
-        ./configure --prefix=/ --target=i686-w64-mingw32 --with-platform=none --host=i686-w64-mingw32
-    - name: i686-w64-mingw make
-      run: |
-        make
-        make install DESTDIR=$PWD/PKG
-    - name: i686-w64-mingw clean
-      run: make clean
+      - name: Set up Docker container
+        uses: addnab/docker-run-action@v3
+        with:
+          image: ubuntu:20.04
+          options: --user root
+          run: |
+            apt-get update
+            apt-get install -y build-essential python3 python3-pip python3-dev iasl lzop unifont autopoint bison flex gettext gcc-mingw-w64 libc6-dev libtool pkg-config libssl-dev
+            apt-get install -y mingw-w64
+            ./bootstrap
+            ./configure --prefix=/ --target=i686-w64-mingw32 --with-platform=none --host=i686-w64-mingw32
+            make
+            make install DESTDIR=$PWD/PKG
+            make clean
 
-    - name: x86_64-efi configure
-      run: ./configure --prefix=/ --target=x86_64 --with-platform=efi
-    - name: x86_64-efi make
-      run: |
-        make
-        make install DESTDIR=$PWD/PKG
-    - name: x86_64-efi clean
-      run: make clean
 
-    - name: i386-efi configure
-      run: ./configure --prefix=/ --target=i386 --with-platform=efi
-    - name: i386-efi make
-      run: |
-        make
-        make install DESTDIR=$PWD/PKG
-    - name: i386-efi clean
-      run: make clean
+      - name: x86_64-efi configure
+        run: ./configure --prefix=/ --target=x86_64 --with-platform=efi
+      - name: x86_64-efi make
+        run: |
+          make
+          make install DESTDIR=$PWD/PKG
+      - name: x86_64-efi clean
+        run: make clean
 
-    - name: i386-pc configure
-      run: ./configure --prefix=/ --target=i386 --with-platform=pc
-    - name: i386-pc make
-      run: |
-        make
-        make install DESTDIR=$PWD/PKG
-    - name: i386-pc clean
-      run: make clean
+      - name: i386-efi configure
+        run: ./configure --prefix=/ --target=i386 --with-platform=efi
+      - name: i386-efi make
+        run: |
+          make
+          make install DESTDIR=$PWD/PKG
+      - name: i386-efi clean
+        run: make clean
 
-    - name: i386-multiboot configure
-      run: ./configure --prefix=/ --target=i386 --with-platform=multiboot
-    - name: i386-multiboot make
-      run: |
-        make
-        make install DESTDIR=$PWD/PKG
-    - name: i386-multiboot clean
-      run: make clean
+      - name: i386-pc configure
+        run: ./configure --prefix=/ --target=i386 --with-platform=pc
+      - name: i386-pc make
+        run: |
+          make
+          make install DESTDIR=$PWD/PKG
+      - name: i386-pc clean
+        run: make clean
+
+      - name: i386-multiboot configure
+        run: ./configure --prefix=/ --target=i386 --with-platform=multiboot
+      - name: i386-multiboot make
+        run: |
+          make
+          make install DESTDIR=$PWD/PKG
+      - name: i386-multiboot clean
+        run: make clean
 
 #    - name: i386-coreboot configure
 #      run: ./configure --prefix=/ --target=i386 --with-platform=coreboot
@@ -73,13 +75,13 @@ jobs:
 #    - name: i386-coreboot clean
 #      run: make clean
 
-    - name: makepkg
-      run: ./makepkg.sh
-    - name: upload
-      uses: marvinpinto/action-automatic-releases@latest
-      with:
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: "latest"
-        prerelease: false
-        title: "Development Build"
-        files: grub2-latest.tar.gz
+      - name: makepkg
+        run: ./makepkg.sh
+      - name: upload
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: "Development Build"
+          files: grub2-latest.tar.gz
