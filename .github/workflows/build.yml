@@ -15,10 +15,9 @@ jobs:
           submodules: 'true'
 
       - name: Set up Docker container
-        uses: addnab/docker-run-action@v3
+        uses: actions/checkout@v4
         with:
-          runs-on: ubuntu:20.04
-          options: --user root
+          submodules: 'true'
           run: |
             sudo apt-get update
             sudo apt-get install -y tzdata
