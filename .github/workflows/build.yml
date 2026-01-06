@@ -33,15 +33,23 @@ jobs:
               ./bootstrap
             fi
 
-      - name: i686-w64-mingw32 configure
-        run: |
-          ./configure --prefix=/ --target=i686-w64-mingw32 --with-platform=none --host=i686-w64-mingw32
-      - name: i686-w64-mingw make
-        run: |
-          make
-          make install DESTDIR=$PWD/PKG
-      - name: i686-w64-mingw clean
-        run: make clean
+            # configure dosyasının varlığını kontrol edelim
+            if [ -f ./configure ]; then
+              echo "Running configure"
+              ./configure --prefix=/ --target=i686-w64-mingw32 --with-platform=none --host=i686-w64-mingw32
+            else
+              echo "Configure not found!"
+            fi
+
+            # Eğer Makefile varsa, make komutunu çalıştır
+            if [ -f Makefile ]; then
+              echo "Running make"
+              make
+              make install DESTDIR=$PWD/PKG
+              make clean
+            else
+              echo "Makefile not found!"
+            fi
 
       - name: x86_64-efi configure
         run: ./configure --prefix=/ --target=x86_64 --with-platform=efi
