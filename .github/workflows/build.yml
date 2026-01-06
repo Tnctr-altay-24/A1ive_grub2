@@ -14,7 +14,7 @@ jobs:
     - name: initialize
       run: |
         sudo apt-get -y update
-        sudo -E apt-get -y install build-essential python iasl lzop unifont autopoint bison flex gettext gcc-aarch64-linux-gnu gcc-arm-linux-gnueabi gcc-mingw-w64
+        sudo -E apt-get -y install build-essential python iasl lzop unifont autopoint bison flex gettext gcc-mingw-w64
     - name: bootstrap
       run: ./bootstrap
 
@@ -26,26 +26,6 @@ jobs:
         make
         make install DESTDIR=$PWD/PKG
     - name: i686-w64-mingw clean
-      run: make clean
-
-    - name: arm64-efi configure
-      run: |
-        ./configure --prefix=/ --target=aarch64-linux-gnu --with-platform=efi --host=aarch64-linux-gnu
-    - name: arm64-efi make
-      run: |
-        make
-        make install DESTDIR=$PWD/PKG
-    - name: arm64-efi clean
-      run: make clean
-
-    - name: arm-efi configure
-      run: |
-        ./configure --prefix=/ --target=arm-linux-gnueabi --with-platform=efi --host=arm-linux-gnueabi
-    - name: arm-efi make
-      run: |
-        make
-        make install DESTDIR=$PWD/PKG
-    - name: arm-efi clean
       run: make clean
 
     - name: x86_64-efi configure
