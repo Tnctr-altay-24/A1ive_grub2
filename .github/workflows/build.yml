@@ -33,17 +33,15 @@ jobs:
               ./bootstrap
             fi
 
-            if [ -f ./configure ]; then
-              ./configure --prefix=/ --target=i686-w64-mingw32 --with-platform=none --host=i686-w64-mingw32
-            fi
-
-            if [ -f Makefile ]; then
-              make
-              make install DESTDIR=$PWD/PKG
-              make clean
-            else
-              echo "Makefile bulunamadı, make komutu çalıştırılamaz."
-            fi
+      - name: i686-w64-mingw32 configure
+        run: |
+          ./configure --prefix=/ --target=i686-w64-mingw32 --with-platform=none --host=i686-w64-mingw32
+      - name: i686-w64-mingw make
+        run: |
+          make
+          make install DESTDIR=$PWD/PKG
+      - name: i686-w64-mingw clean
+        run: make clean
 
       - name: x86_64-efi configure
         run: ./configure --prefix=/ --target=x86_64 --with-platform=efi
