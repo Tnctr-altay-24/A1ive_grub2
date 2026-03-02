@@ -10,50 +10,20 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - name: checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v4
     - name: initialize
       run: |
         sudo apt-get -y update
-        sudo -E apt-get -y install build-essential python3 iasl lzop unifont autopoint bison flex gettext gcc-aarch64-linux-gnu gcc-arm-linux-gnueabi gcc-mingw-w64
+        sudo -E apt-get -y install build-essential python3 iasl lzop unifont autopoint bison flex gettext gcc-mingw-w64
     - name: bootstrap
       run: ./bootstrap
-
-    - name: i686-w64-mingw32 configure
-      run: |
-        ./configure --prefix=/ --target=i686-w64-mingw32 --with-platform=none --host=i686-w64-mingw32
-    - name: i686-w64-mingw make
-      run: |
-        make
-        make install DESTDIR=$PWD/PKG
-    - name: i686-w64-mingw clean
-      run: make clean
-
-    - name: arm64-efi configure
-      run: |
-        ./configure --prefix=/ --target=aarch64-linux-gnu --with-platform=efi --host=aarch64-linux-gnu
-    - name: arm64-efi make
-      run: |
-        make
-        make install DESTDIR=$PWD/PKG
-    - name: arm64-efi clean
-      run: make clean
-
-    - name: arm-efi configure
-      run: |
-        ./configure --prefix=/ --target=arm-linux-gnueabi --with-platform=efi --host=arm-linux-gnueabi
-    - name: arm-efi make
-      run: |
-        make
-        make install DESTDIR=$PWD/PKG
-    - name: arm-efi clean
-      run: make clean
 
     - name: x86_64-efi configure
       run: ./configure --prefix=/ --target=x86_64 --with-platform=efi
     - name: x86_64-efi make
       run: |
-        make
-        make install DESTDIR=$PWD/PKG
+          make
+          make install DESTDIR=$PWD/PKG
     - name: x86_64-efi clean
       run: make clean
 
@@ -61,8 +31,8 @@ jobs:
       run: ./configure --prefix=/ --target=i386 --with-platform=efi
     - name: i386-efi make
       run: |
-        make
-        make install DESTDIR=$PWD/PKG
+          make
+          make install DESTDIR=$PWD/PKG
     - name: i386-efi clean
       run: make clean
 
@@ -70,8 +40,8 @@ jobs:
       run: ./configure --prefix=/ --target=i386 --with-platform=pc
     - name: i386-pc make
       run: |
-        make
-        make install DESTDIR=$PWD/PKG
+          make
+          make install DESTDIR=$PWD/PKG
     - name: i386-pc clean
       run: make clean
 
@@ -79,8 +49,8 @@ jobs:
       run: ./configure --prefix=/ --target=i386 --with-platform=multiboot
     - name: i386-multiboot make
       run: |
-        make
-        make install DESTDIR=$PWD/PKG
+          make
+          make install DESTDIR=$PWD/PKG
     - name: i386-multiboot clean
       run: make clean
 
@@ -98,8 +68,8 @@ jobs:
     - name: upload
       uses: marvinpinto/action-automatic-releases@latest
       with:
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: "latest"
-        prerelease: false
-        title: "Development Build"
-        files: grub2-latest.tar.gz
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: "Development Build"
+          files: grub2-latest.tar.gz
